@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	tools:ignore="HardcodedText"
+	tools:context=".MainActivity" >
+
+	<EditText
+	    android:id="@+id/text1"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:gravity="start"
+	    android:text="Hello Message Loop"
+	    android:inputType="textMultiLine"
+	    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+	<EditText
+	    android:id="@+id/text2"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:gravity="start"
+	    android:inputType="textMultiLine"
+	    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+
+		<Button
+			android:id="@+id/task_button"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:onClick="onBtnTask"
+			android:text="@string/start" />
+
+		<Button
+			android:id="@+id/send_button"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:onClick="onBtnSend"
+			android:text="Send" />
+
+	</LinearLayout>
+
+</LinearLayout>
