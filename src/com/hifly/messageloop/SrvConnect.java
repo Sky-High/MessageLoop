@@ -10,24 +10,28 @@ import java.nio.channels.SocketChannel;
 
 import android.util.Log;
 
+/**
+ * <h1>the SrvConnect class</h1>
+ * Handle the socket channel connection to the server and its read and send buffers. 
+ */
 public class SrvConnect {
 	private static final String 	SRV_TAG = "SrvConnect";
-	private static TaskFragment.TaskHandler	 handler;	//handler of worker thread
+	private static TaskFragment.TaskHandler	 hTask; 	//handler of worker thread
 	private static final int    	BUFLEN = 512;
 	private static ReceiveData  	receiveData;
 	private static SocketChannel	socketCh;
 	private static ByteBuffer   	readBuf, sendBuf;
 
 	/*****************************
-	 * SrvConnect constructor: initialize parameters
-	 * @param hHandler
-	 * @param socket
+	 * <h1>SrvConnect constructor</h1>
+	 * Initialize parameters, create read and send ByteBuffers.
+	 * @param handler message handler of the worker Task Thread
 	 */
-	SrvConnect(TaskFragment.TaskHandler hHandler) {
+	SrvConnect(TaskFragment.TaskHandler handler) {
 		socketCh	= null;
 		receiveData	= null;
-		handler		= hHandler;		// for submitting messages
-		Log.i(SRV_TAG, "-- SrvConnect("+ handler + ") constructed: "+this);
+		hTask		= handler;		// for submitting messages
+		Log.i(SRV_TAG, "-- SrvConnect("+ hTask + ") constructed: "+this);
 		readBuf		= ByteBuffer.allocateDirect(BUFLEN);
 		readBuf.order(ByteOrder.LITTLE_ENDIAN);
 		sendBuf		= ByteBuffer.allocateDirect(BUFLEN);
@@ -35,7 +39,7 @@ public class SrvConnect {
 	}
 
 	/*****************************
-	 * Open server connection as SocketChannel
+	 * Open server connection as SocketChannel and start the ReceiveData thread.
 	 * @param server_IP IP address of server
 	 * @param serverPort port at server
 	 * @return handle to SocketChannel
@@ -55,7 +59,7 @@ public class SrvConnect {
 		
 		// start receive thread to loop for data reads
 		if( null == receiveData) {
-			receiveData	= new ReceiveData(handler, this);
+			receiveData	= new ReceiveData(hTask, this);
 			receiveData.start();
 		}
 		
@@ -63,8 +67,7 @@ public class SrvConnect {
 	}
 
 	/*****************************
-	 * Close socket connection
-	 * @return handle to closed SocketChannel
+	 * Close socket connection and its ReceiveData thread.
 	 */
 	void Close() {
 		if(null == socketCh) {
@@ -101,7 +104,7 @@ public class SrvConnect {
 	}
 
 	/*****************************
-	 *	read data from the socket into the read buffer bBuf
+	 *	read data from the socket into the read buffer readBuf
 	 */
 	void readRecord(){
 		readBuf.clear();
@@ -112,19 +115,15 @@ public class SrvConnect {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		int cbRead	        = readBuf.position();	// nr of bytes read
-		DispatchWork.num	= cbRead;
-		byte[] bBytes   	= new byte[cbRead];
-		readBuf.rewind();
-		readBuf.get(bBytes);
-
-		String t	= "rcv["+cbRead+"]";
-		DispatchWork.val	= t+":"+new String(bBytes);
-		Log.i(SRV_TAG, "... "+t);
+		int nRead	        = readBuf.position();	// number of bytes read
+		String txt        	= new String(readBuf.array(), 0, nRead);
+		DispatchWork.num	= nRead;
+		DispatchWork.val	= txt;
+		Log.i(SRV_TAG, "... ["+nRead+"]="+txt);
 	}
 
 	/*****************************
-	 * write data to socket
+	 * write data to socket channel
 	 */
 	void writeRecord() {
 		Log.i(SRV_TAG, "... writeRecord{"+DispatchWork.num+"}"+DispatchWork.val);

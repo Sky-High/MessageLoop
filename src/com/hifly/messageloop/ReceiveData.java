@@ -5,7 +5,8 @@ import android.os.Message;
 import android.util.Log;
 
 /**
- * The ReceiveData class implements a thread that runs independently and separately from
+ * <h1>The ReceiveData class</h1>
+ * implements a thread that runs independently and separately from
  * the main UI thread and the worker thread.
  * <br>
  * Class variables may be declared static without problem as this class will be created
@@ -20,13 +21,13 @@ public class ReceiveData extends Thread {
 
 	/*****************************
 	 * ReceiveData constructor
-	 * @param hHandler
-	 * @param socket
+	 * @param handle message handler of the Task Thread
+	 * @param sc server connection object
 	 */
-	ReceiveData(TaskFragment.TaskHandler h, SrvConnect c) {
+	ReceiveData(TaskFragment.TaskHandler handle, SrvConnect sc) {
 		this.setName(RT_TAG);
-		hTask   	= h;
-		SrvConnect	= c;
+		hTask   	= handle;
+		SrvConnect	= sc;
 		Log.i(RT_TAG, "-- Rcv("+ hTask +":"+ SrvConnect +  ") constructed: "+this);
 	}
 
@@ -57,11 +58,8 @@ public class ReceiveData extends Thread {
 		mReceiveHandler.sendEmptyMessage(what);
 	}
 
-
-	// ------------------------------------
-	// ----- the ReceiveHandler class -----
-
 	/*****************************
+	 * <h1>the ReceiveHandler class</h1>
 	 * ReceiveHandler is called when a command message is received from the sender
 	 * by means of a call to sendReadCmd().
 	 * This handler will process the messages.

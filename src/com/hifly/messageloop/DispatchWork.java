@@ -1,9 +1,8 @@
 package com.hifly.messageloop;
-import java.nio.channels.SocketChannel;
-
 import android.util.Log;
 
 /**
+ * <h1>the DispatchWork class</h1>
  * Dispatches action commands submitted as messages. DispatchWork runs
  * in a worker thread ChildThread which is a fragment and thread separate from the main UI
  * thread of MainActivity as to not interfere or block UI actions.
@@ -43,8 +42,7 @@ public class DispatchWork {
 	public static int   	    	num;
 
 	/*****************************
-	 * DispatchWork constructor
-	 * <p>
+	 * <h1>DispatchWork constructor</h1>
 	 * For sockets, java.nio and bytebuffers, see also:
 	 * <br>http://examples.javacodegeeks.com/android/core/socket-core/android-socket-example/<br>
 	 * For android emulator ip address and port configuration, see:
@@ -88,20 +86,19 @@ public class DispatchWork {
 
 	// ---------------------------
 	//	supporting functions
-	// ---------------------------
 
 	/*****************************
 	 * open a socket connection with the server
 	 */
 	private static void openSocket() {
-		Log.i(TAG, "... openSocket:"+server_IP+":"+SERVERPORT);
+		Log.i(TAG, "-- openSocket{begin}");
 		srvConnect	= new SrvConnect(hTask);
-		SocketChannel socketCh	= srvConnect.Open(server_IP, SERVERPORT);
+		srvConnect.Open(server_IP, SERVERPORT);
 
 		bConnected	= true;
-		val	= (null == socketCh )?"$$": socketCh.toString();
-		Log.i(TAG, "... openSocket>>"+val);
+		val	    	= "Connected";
 		hTask.sendResult(DW_OPEN_SOCKET);
+		Log.i(TAG, "-- openSocket{end}");
 	}
 
 	/*****************************
@@ -143,7 +140,7 @@ public class DispatchWork {
 
 		srvConnect.writeRecord();
 
-		Log.i(TAG, "... writeSrv>>done");
+		Log.i(TAG, "... writeSrv>>done:"+DW_WRITE_SRV);
 		hTask.sendResult(DW_WRITE_SRV);
 	}
 

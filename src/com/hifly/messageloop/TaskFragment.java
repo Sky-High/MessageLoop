@@ -64,8 +64,7 @@ public class TaskFragment extends Fragment {
 		public void 	updActivity(String t);
 	}
 
-	// ---------------------------
-	/**
+	/*****************************
 	 * Android passes us a reference to the newly created Activity by calling this
 	 * method after each configuration change.
 	 * <p>
@@ -87,9 +86,10 @@ public class TaskFragment extends Fragment {
 		Log.i(TF_TAG, "-- onAttach("+activity+") in "+this);
 	}
 
-	// ---------------------------
-	/**
+	/*****************************
 	 * This method is called only once when the Fragment is first created.
+	 * Start the worker thread TaskThread, and create the MainHandler for the
+	 * main UI thread.
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -106,8 +106,7 @@ public class TaskFragment extends Fragment {
 		new TaskThread().start();
 	}	// ----- end onCreate -----
 
-	// ---------------------------
-	/**
+	/*****************************
 	 * This method is <em>not</em> called when the Fragment is being retained
 	 * across Activity instances.
 	 */
@@ -122,20 +121,16 @@ public class TaskFragment extends Fragment {
 		mTaskHandler.getLooper().quit();
 	}
 
-	// ---------------------------
-	/**
-	 * process command from MainActivity by sending a command code to the task thread
+	/*****************************
+	 * process command from MainActivity by sending a command code to the Task Thread
 	 * @param what action command code to submit
 	 */
 	public void doCmd(int what) {
 		mTaskHandler.sendEmptyMessage(what);
 	}
 
-
-	// ------------------------------------
-	// ----- the MainHandler class    -----
-	// ------------------------------------
-	/**
+	/**************************************
+	 * <h1>the MainHandler class</h1>
 	 * Create the main handler.
 	 * <br>
 	 * Even though TaskFragment is a separate fragment, it is on the main thread so bound to
@@ -164,11 +159,8 @@ public class TaskFragment extends Fragment {
 		}
 	}	// ---- end MainHandler
 
-
-	// ------------------------------------
-	// ----- the TaskThread class    -----
-	// ------------------------------------
-	/**
+	/**************************************
+	 * <h1>the TaskThread class</h1>
 	 * The TaskThread class implements a thread that runs independently and separately from
 	 * the main UI thread.
 	 * <br>
@@ -190,11 +182,8 @@ public class TaskFragment extends Fragment {
 		}
 	}	// ----- end TaskThread
 
-
-	// ------------------------------------
-	// ----- the TaskHandler class   -----
-	// ------------------------------------
-	/**
+	/**************************************
+	 * <h1>the TaskHandler class</h1>
 	 * TaskHandler is the message handler for TaskThread worker thread
 	 * <p>
 	 * TaskFragment is retained, so this thread is not supposed to be reconfigured or leak.
